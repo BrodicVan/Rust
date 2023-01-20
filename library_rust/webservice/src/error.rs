@@ -13,6 +13,7 @@ pub enum MyError {
 
 #[derive(Debug, Serialize)]
 pub struct MyErrorResponse {
+    // status:i32,
     error_message: String,
 }
 
@@ -50,6 +51,7 @@ impl error::ResponseError for MyError {
 
     fn error_response(&self) -> HttpResponse {
         HttpResponse::build(self.status_code()).json(MyErrorResponse {
+            // status:self.status_code(),
             error_message: self.error_response(),
         })
     }

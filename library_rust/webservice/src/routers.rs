@@ -32,3 +32,9 @@ pub fn user_routes(cfg: &mut web::ServiceConfig){
             .route("/{user_id}", web::delete().to(delete_user))
     );
 }
+pub fn login_routes(cfg: &mut web::ServiceConfig){
+    cfg.service(
+        web::scope("/login")
+            .route("/", web::post().to(post_login_request))
+    );
+}

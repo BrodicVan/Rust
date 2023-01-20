@@ -1,5 +1,5 @@
 use crate::error::MyError;
-use crate::models::user::{User, CreateUser, UpdateUser};
+use crate::models::user::{User, CreateUser, UpdateUser, LoginUser};
 use sqlx::postgres::PgPool;
 
 //查询所有用户
@@ -116,4 +116,26 @@ pub async fn delete_user_db(pool: &PgPool, id: i32) -> Result<String, MyError> {
     .execute(pool)
     .await?;
     Ok(format!("DeletedI{:?}record", user_row))
+}
+
+//判断登录
+pub async fn post_login_request_db(pool: &PgPool, login_user:LoginUser)->Result<User,MyError>{
+    let row = sqlx::query!("SELECT id,name,password,is_mana FROM user1 where id=$1",login_user.id)
+        .fetch_one(pool)
+        .await
+        .map(|r| User{
+            id:r.id,
+            name:r.name,
+            password:r.password,
+            is_mana:r.is_mana,
+        })
+        .map_err(|_err| MyError::NotFound("User Id not found".into()))?;
+    if row.password==login_user.password
+    {
+        Ok(row)
+    }
+    else{
+        Err(MyError::InvalidInput("Id or password wrong".into()))
+    }
+    
 }

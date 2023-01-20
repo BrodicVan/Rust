@@ -1,6 +1,6 @@
 use crate::db_access::user::*;
 use crate::error::MyError;
-use crate::models::user::{CreateUser, UpdateUser};
+use crate::models::user::{CreateUser, UpdateUser, LoginUser};
 use crate::state::AppState;
 use actix_web::{web, HttpResponse};
 
@@ -47,6 +47,15 @@ pub async fn delete_user(
 )->Result<HttpResponse,MyError>{
     let id = params.into_inner();
     delete_user_db(&app_state.db, id)
+        .await
+        .map(|user| HttpResponse::Ok().json(user))
+}
+
+pub async fn post_login_request(
+    login_user: web::Json<LoginUser>,
+    app_state: web::Data<AppState>,
+)->Result<HttpResponse,MyError>{
+    post_login_request_db(&app_state.db, LoginUser::from(login_user))
         .await
         .map(|user| HttpResponse::Ok().json(user))
 }
