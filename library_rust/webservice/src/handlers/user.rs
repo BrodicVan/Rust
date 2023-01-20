@@ -10,13 +10,13 @@ pub async fn get_all_users(app_state: web::Data<AppState>)-> Result<HttpResponse
         .map(|users| HttpResponse::Ok().json(users))
 }
 
-pub async fn get_user_byId(
+pub async fn get_user_by_id(
     app_state: web::Data<AppState>,
     params: web::Path<i32>,
 ) -> Result<HttpResponse, MyError> {
     // let teacher_id = i32::try_from(params.0).unwrap();
     let id = params.into_inner();
-    get_user_byId_db(&app_state.db, id)
+    get_user_by_id_db(&app_state.db, id)
         .await
         .map(|user| HttpResponse::Ok().json(user))
 }

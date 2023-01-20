@@ -1,4 +1,4 @@
-use crate::handlers::{course::*, user::*,general::health_check_handler};
+use crate::handlers::{course::*, user::*,book::*,general::health_check_handler};
 
 use actix_web::web;
 pub fn general_routes(cfg: &mut web::ServiceConfig) {
@@ -27,9 +27,10 @@ pub fn user_routes(cfg: &mut web::ServiceConfig){
         web::scope("/users")
             .route("/", web::post().to(post_new_user))
             .route("/", web::get().to(get_all_users))
-            .route("/{user_id}", web::get().to(get_user_byId))
+            .route("/{user_id}", web::get().to(get_user_by_id))
             .route("/{user_id}", web::put().to(update_user_details))
             .route("/{user_id}", web::delete().to(delete_user))
+            .route("/{user_id}/borrow/",web::get().to(get_all_books))
     );
 }
 

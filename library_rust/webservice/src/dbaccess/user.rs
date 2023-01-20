@@ -24,7 +24,7 @@ pub async fn get_all_users_db(pool: &PgPool)->Result<Vec<User>,MyError>
 }
 
 //查询指定用户
-pub async fn get_user_byId_db(pool: &PgPool,id:i32)->Result<User,MyError>
+pub async fn get_user_by_id_db(pool: &PgPool,id:i32)->Result<User,MyError>
 {
     let row = sqlx::query!("SELECT id,name,password,is_mana FROM user1 where id=$1",id)
         .fetch_one(pool)
