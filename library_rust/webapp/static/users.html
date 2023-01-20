@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Users</title>
+    </head>
+    <body>
+        <h1>User list</h1>
+        <ol>
+            {% for t in users %}
+            <li>
+                <h5>{{t.name}}</h5>
+                <div>{{t.id}}</div>
+            </li>
+            {% endfor %}
+        </ol>
+        <div style="margin-top: 20px">
+            <a href="/register">Register a user</a>
+        </div>
+    </body>
+</html>
