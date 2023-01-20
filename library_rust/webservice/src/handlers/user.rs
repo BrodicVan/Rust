@@ -1,6 +1,6 @@
 use crate::db_access::user::*;
 use crate::error::MyError;
-use crate::models::user::{CreateUser, UpdateUser, LoginUser};
+use crate::models::user::{CreateUser, UpdateUser, LoginUser, RegUser};
 use crate::state::AppState;
 use actix_web::{web, HttpResponse};
 
@@ -56,6 +56,15 @@ pub async fn post_login_request(
     app_state: web::Data<AppState>,
 )->Result<HttpResponse,MyError>{
     post_login_request_db(&app_state.db, LoginUser::from(login_user))
+        .await
+        .map(|user| HttpResponse::Ok().json(user))
+}
+
+pub async fn post_reg_request(
+    reg_user: web::Json<RegUser>,
+    app_state: web::Data<AppState>,
+)->Result<HttpResponse,MyError>{
+    post_reg_request_db(&app_state.db, RegUser::from(reg_user))
         .await
         .map(|user| HttpResponse::Ok().json(user))
 }

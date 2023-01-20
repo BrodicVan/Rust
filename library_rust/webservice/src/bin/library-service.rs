@@ -48,6 +48,7 @@ async fn main() -> io::Result<()> {
             .configure(course_routes)
             .configure(user_routes)
             .configure(login_routes)
+            .configure(reg_routes)
     };
 
     HttpServer::new(app)

@@ -24,6 +24,12 @@ pub struct UpdateUser{
 }
 
 #[derive(Deserialize,Debug,Clone)]
+pub struct RegUser{
+    pub name:String,
+    pub password:String,
+}
+
+#[derive(Deserialize,Debug,Clone)]
 pub struct LoginUser{
     pub id:i32,
     pub password:String,
@@ -54,6 +60,15 @@ impl From<web::Json<LoginUser>> for LoginUser{
         LoginUser { 
             id: login_user.id.clone(), 
             password: login_user.password.clone(),
+        }        
+    }
+}
+
+impl From<web::Json<RegUser>> for RegUser{
+    fn from(reg_user: web::Json<RegUser>) -> Self {
+        RegUser { 
+            name: reg_user.name.clone(), 
+            password: reg_user.password.clone(),
         }        
     }
 }
