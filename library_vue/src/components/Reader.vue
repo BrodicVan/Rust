@@ -13,20 +13,20 @@
                     >
                         <el-menu-item index="1" @click="changeChoice(1)">
                             <div class="menu_font">
-                                <p>查看用户</p>
+                                <p>图书借阅</p>
                             </div>
                             
                         </el-menu-item>
                         <el-menu-item index="2" @click="changeChoice(2)">
                             <div class="menu_font">
-                                <p>借书记录</p>
+                                <p>图书归还</p>
                             </div>
                         </el-menu-item>
                     </el-menu>
                 </el-col>
             </el-aside>
             <el-main >
-                <AllUserInfo v-if="choice==1"></AllUserInfo>
+                <BorrowBook v-if="choice==1"></BorrowBook>
                 <AllBorrow v-if="choice==2"></AllBorrow>
             </el-main>
         </el-container>
@@ -38,12 +38,13 @@
 
 
 <script>
-import AllUserInfo from './AllUserInfo.vue';
-import AllBorrow from './AllBorrow.vue'
+import BorrowBook from './BorrowBook.vue';
+
+
 
 export default 
 {
-    name: "Manager",
+    name: "Reader",
     data() {
         return {
             choice: 1
@@ -60,7 +61,7 @@ export default
             this.choice = c;
         }
     },
-    components: { AllUserInfo, AllBorrow}
+    components: { BorrowBook }
 }
 </script>
     

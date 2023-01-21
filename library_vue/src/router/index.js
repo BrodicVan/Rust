@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import login from '../components/Login.vue'
 import reg from '../components/Register.vue'
 import manager from '../components/Manager.vue'
+import reader from '../components/Reader.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,11 @@ const router = createRouter({
       path: '/manager',
       name: 'manager',
       component: manager
+    },
+    {
+      path: '/reader',
+      name: 'reader',
+      component: reader
     }
   ]
 })

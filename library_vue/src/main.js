@@ -4,7 +4,7 @@ import router from './router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import axios from 'axios'
-
+import user_info from './components/AllUserInfo.vue'
 
 const app = createApp(App)
 
@@ -16,6 +16,8 @@ axios.defaults.baseURL = '/api'
 
 app.config.globalProperties.$axios = axios
 app.config.globalProperties.$rust = 'http://localhost:3333'
+
+
 
 app.mount('#app')
 

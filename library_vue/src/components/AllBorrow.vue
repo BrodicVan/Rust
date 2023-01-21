@@ -36,12 +36,7 @@ export default
             currentPage: 1,
             pageSize: 10,
             allData:[
-                // {
-                //     id: 1,
-                //     name: '范兆基',
-                //     password: '123456',
-                //     is_mana: true
-                // }
+
             ],
             tableData: [],
         }
@@ -90,7 +85,7 @@ export default
         },
         ifMana(row)
         {
-            return row.is_mana?'是':'否';
+            return row.ifMana?'是':'否';
         }
     }
 }
