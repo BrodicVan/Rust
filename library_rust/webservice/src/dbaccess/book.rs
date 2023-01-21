@@ -1,7 +1,7 @@
 use sqlx::postgres::PgPool;
-use sqlx::Pool;
 
-use crate::{models::{book::{Book, BorrowBook, CreateBook, UpdateBook, DeleteBook}, record::bRecord}, error::MyError};
+
+use crate::{models::{book::{Book, BorrowBook, CreateBook, UpdateBook}, record::bRecord}, error::MyError};
 
 pub async fn get_all_books_db(pool: &PgPool)->Result<Vec<Book>,MyError>
 {
@@ -53,19 +53,19 @@ pub async fn borrow_book_db(
 
     let record_row = sqlx::query_as!(
         bRecord,
-        r#"INSERT INTO record (user_id, book_id,return_time, is_return)
-        VALUES ($1, $2, NULL, FALSE)
+        r#"INSERT INTO record (user_id, book_id,borrow_time,return_time, is_return)
+        VALUES ($1, $2, (select NOW() at time zone 'Asia/Shanghai'), NULL, FALSE)
         RETURNING id, user_id, book_id, borrow_time, return_time, is_return"#,
         user_id, borrow_book.id
         )
     .fetch_one(pool)
     .await;
 
-    if let Ok(record) = record_row {
+    if let Ok(_record) = record_row {
         Ok(book_row)
     } else {
         //手动事务
-        let book_row = sqlx::query_as!(
+        let _book_row = sqlx::query_as!(
             Book,
             "UPDATE book SET is_borrowed = FALSE
                 where id = $1

@@ -48,7 +48,7 @@ async fn main() -> io::Result<()> {
             }))
             .wrap(Cors::default()
             .allow_any_origin()
-            .allowed_origin_fn(|origin, _req_head| {
+            .allowed_origin_fn(|_origin, _req_head| {
                 return true
             })
             .allow_any_method()

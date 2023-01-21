@@ -1,6 +1,5 @@
 use sqlx::postgres::PgPool;
 
-use chrono::NaiveDateTime;
 use crate::{models::{record::bRecord, book::{ReturnBook, Book}}, error::MyError};
 
 pub async fn get_all_records_by_user_id_db(pool: &PgPool,user_id:i32)->Result<Vec<bRecord>,MyError>
@@ -71,10 +70,11 @@ pub async fn return_book_db(
     .await
     .map_err(|_err| MyError::NotFound("Book Id not found".into()))?;
     
-
+    // let a= sqlx::query("select LOCALTIME").fetch_one(pool).await;
+    // println!("{:?}", a.unwrap().into());
     let record_row = sqlx::query_as!(
         bRecord,
-        "UPDATE record SET is_return = TRUE,return_time=NOW()
+        "UPDATE record SET is_return = TRUE,return_time=(select NOW() at time zone 'Asia/Shanghai')
             where id = $1
             RETURNING id, user_id, book_id, borrow_time,return_time, is_return",
         return_book.record_id,
@@ -82,11 +82,11 @@ pub async fn return_book_db(
     .fetch_one(pool)
     .await;
 
-    if let Ok(record) = record_row {
+    if let Ok(_record) = record_row {
         Ok(book_row)
     } else {
         //手动事务
-        let book_row = sqlx::query_as!(
+        let _book_row = sqlx::query_as!(
             Book,
             "UPDATE book SET is_borrowed = TRUE
                 where id = $1
