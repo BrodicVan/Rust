@@ -9,3 +9,16 @@ pub struct Book{
     pub press:String,
     pub is_borrowed:bool,
 }
+
+#[derive(Deserialize,Debug,Clone)]
+pub struct BorrowBook{
+    pub id:i32,
+}
+
+impl From<web::Json<BorrowBook>> for BorrowBook{
+    fn from(borrow_book: web::Json<BorrowBook>) -> Self {
+        BorrowBook { 
+            id:borrow_book.id ,
+        }        
+    }
+}

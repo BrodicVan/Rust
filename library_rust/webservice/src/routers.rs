@@ -31,6 +31,7 @@ pub fn user_routes(cfg: &mut web::ServiceConfig){
             .route("/{user_id}", web::put().to(update_user_details))
             .route("/{user_id}", web::delete().to(delete_user))
             .route("/{user_id}/borrow/",web::get().to(get_all_books))
+            .route("/{user_id}/borrow/", web::post().to(borrow_book))
     );
 }
 

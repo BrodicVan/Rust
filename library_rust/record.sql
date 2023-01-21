@@ -5,7 +5,5 @@ create table record (
        book_id int not null,
        borrow_time TIMESTAMP default now(),
        return_time TIMESTAMP,
-       writer varchar(140) not null,
-       press varchar(140) not null,
-	   is_return boolean not null
+	is_return boolean not null
 );
