@@ -43,6 +43,6 @@ pub fn manager_routes(cfg: &mut web::ServiceConfig){
             .route("/{manager_id}/edit_record", web::get().to(get_all_records))
             .route("/{manager_id}/edit_book",web::post().to(add_book))
             .route("/{manager_id}/edit_book",web::put().to(edit_book))
-            .route("/{manager_id}/edit_book",web::delete().to(delete_book))
+            .route("/{manager_id}/{book_id}",web::delete().to(delete_book))
     );
 }
