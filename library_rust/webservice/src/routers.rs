@@ -33,6 +33,7 @@ pub fn user_routes(cfg: &mut web::ServiceConfig){
             .route("/{user_id}/borrow/",web::get().to(get_all_books))
             .route("/{user_id}/borrow/", web::post().to(borrow_book))
             .route("/{user_id}/return/", web::get().to(get_all_records_by_user_id))
+            .route("/{user_id}/return/",web::post().to(return_book))
     );
 }
 

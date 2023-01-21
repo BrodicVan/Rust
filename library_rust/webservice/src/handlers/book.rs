@@ -20,5 +20,5 @@ pub async fn borrow_book(
     let user_id = params.into_inner();
     borrow_book_db(&app_state.db, user_id, BorrowBook::from(borrow_book),)
         .await
-        .map(|user| HttpResponse::Ok().json(user))
+        .map(|book| HttpResponse::Ok().json(book))
 }
