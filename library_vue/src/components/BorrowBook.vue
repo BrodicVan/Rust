@@ -4,7 +4,7 @@
         <el-table
             :data="refreshTableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
             style="width: 100%;margin-top:20px" border :height="580"
-            :default-sort = "{prop: 'id', order: 'ascending'}" stripe empty-text="暂无数据" >
+            :default-sort="{ prop: 'id'}" stripe empty-text="暂无数据" >
             <el-table-column  prop="id" label="书籍编号" min-width="1" sortable align="center"></el-table-column>
             <el-table-column prop="name" label="书名" min-width="1" align="center"></el-table-column>
             <el-table-column prop="writer" label="作者" min-width="1" align="center" ></el-table-column>

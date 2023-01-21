@@ -61,6 +61,14 @@ export default {
         {
             var temData = this.allData;
             temData = temData.filter(data=> !this.search || data.name.toLowerCase().includes(this.search.toLowerCase()))
+            temData.forEach((item,index)=>{
+              item.borrow_time = item.borrow_time.substr(0,10);  
+              if(item.return_time!=null)
+              {
+                item.return_time = item.return_time.substr(0,10);  
+              }
+              
+            })
             this.currentPage = 1;
             return temData;
         }
@@ -117,6 +125,7 @@ export default {
             .then(res=>{
                 this.$message.success("归还成功");
                 this.getAllRecords();
+                return;
             })
             .catch(res=>{
                 this.$message.error(res.response.data.error_message);

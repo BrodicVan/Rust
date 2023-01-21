@@ -40,17 +40,17 @@
         </el-row>
 
         <el-dialog title="图书信息" v-model="is_show" width="30%">
-            <el-form ref="changeForm" :model="curBook" label-width="80px" >
+            <el-form ref="changeForm" :model="curBook" label-width="80px" :rules="rules">
                 <el-form-item label="编号">
                     <el-input  v-model="curBook.id" disabled ></el-input>
                 </el-form-item>
-                <el-form-item label="书名">
+                <el-form-item label="书名" prop="name">
                     <el-input  v-model="curBook.name" ></el-input>
                 </el-form-item>
-                <el-form-item label="作者">
+                <el-form-item label="作者" prop="writer">
                     <el-input v-model="curBook.writer"></el-input>
                 </el-form-item>
-                <el-form-item label="出版社">
+                <el-form-item label="出版社" prop="press">
                     <el-input v-model="curBook.press"></el-input>
                 </el-form-item>
 
@@ -63,14 +63,14 @@
 
 
         <el-dialog title="添加书籍" v-model="is_add" width="30%" >
-            <el-form ref="addForm" :model="newBook" label-width="80px" >
-                <el-form-item label="书名">
+            <el-form ref="addForm" :model="newBook" label-width="80px" :rules="rules">
+                <el-form-item label="书名" prop="name">
                     <el-input  v-model="newBook.name" ></el-input>
                 </el-form-item>
-                <el-form-item label="作者">
+                <el-form-item label="作者" prop="writer">
                     <el-input v-model="newBook.writer"></el-input>
                 </el-form-item>
-                <el-form-item label="出版社">
+                <el-form-item label="出版社" prop="press">
                     <el-input v-model="newBook.press"></el-input>
                 </el-form-item>
             </el-form>
@@ -109,7 +109,24 @@ export default {
                 press: '',
             },
             is_show: false,
-            is_add: false
+            is_add: false,
+            rules:
+            {
+                name: 
+                [
+                    { required: true, message: '请输入书名', trigger: 'blur' },
+                    
+                ],
+                writer:
+                [
+                    { required: true, message: '请输入作者', trigger: 'blur' },
+                    
+                ],
+                press:
+                [
+                    { required: true, message: '请输入出版社', trigger: 'blur' },    
+                ]
+            }
         }
     },
     created()
@@ -126,6 +143,7 @@ export default {
         {
             var temData = this.allData;
             temData = temData.filter(data=> !this.search || data.name.toLowerCase().includes(this.search.toLowerCase()))
+            
             this.currentPage = 1;
             return temData;
         }
@@ -202,21 +220,32 @@ export default {
         },
         addBook()
         {
-            let u = JSON.parse(sessionStorage.getItem("user")||"{}");
-            this.$axios.post(
-                this.$rust + '/managers/'+ u.id + '/edit_book',
-                this.newBook
-            )
-            .then(res=>{
-                
-                this.$message.success("添加成功");
-                this.is_add = false;
-                this.getAllBooks();
-            })
-            .catch(res=>{
-                
-                this.$message.error(res.response.data.error_message);
-          })
+            this.$refs.addForm.validate((valid)=>
+            {
+                if(valid)
+                {
+                    let u = JSON.parse(sessionStorage.getItem("user")||"{}");
+                    this.$axios.post(
+                        this.$rust + '/managers/'+ u.id + '/edit_book',
+                        this.newBook
+                    )
+                    .then(res=>{
+                        
+                        this.$message.success("添加成功");
+                        this.is_add = false;
+                        this.getAllBooks();
+                    })
+                    .catch(res=>{
+                        
+                        this.$message.error(res.response.data.error_message);
+                    })
+                }
+                else
+                {
+                    this.$message.error("请正确填写信息");
+                }
+            });
+            
         },
         clickAdd()
         {
@@ -230,22 +259,34 @@ export default {
         },
         correctBook()// **
         {
-            let u = JSON.parse(sessionStorage.getItem("user")||"{}");
-            this.$axios.put(
-                this.$rust + '/managers/'+ u.id + '/edit_book',
-                this.curBook
-            )
-            .then(res=>{
-                
-                this.$message.success("删除成功");
-                this.is_show = false;
-                this.getAllBooks();
-            })
-            .catch(res=>{
-                
-                this.$message.error(res.response.data.error_message);
-            }
-            )
+            this.$refs.changeForm.validate((valid)=>
+            {
+                if(valid)
+                {
+                    let u = JSON.parse(sessionStorage.getItem("user")||"{}");
+                    this.$axios.put(
+                        this.$rust + '/managers/'+ u.id + '/edit_book',
+                        this.curBook
+                    )
+                    .then(res=>{
+                        
+                        this.$message.success("删除成功");
+                        this.is_show = false;
+                        this.getAllBooks();
+                    })
+                    .catch(res=>{
+                        
+                        this.$message.error(res.response.data.error_message);
+                    }
+                    )
+                }
+                else
+                {
+                    this.$message.error("请正确填写信息");
+                }
+            });
+            
+            
         },
     }
 }
