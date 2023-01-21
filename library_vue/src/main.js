@@ -15,8 +15,8 @@ app.use(ElementPlus)
 axios.defaults.baseURL = '/api'
 
 app.config.globalProperties.$axios = axios
+app.config.globalProperties.$rust = 'http://localhost:3333'
 
-app.config.globalProperties.rust = 'http://localhost:3000'
 app.mount('#app')
 
 
