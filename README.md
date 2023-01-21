@@ -17,4 +17,4 @@
 
 前端端口可自主选择，运行步骤：
 + 安装node.js，并使用npm install -g http-server指令安装http-server
-+ 在library_vue/dist目录下运行指令`http-server`即可完成部署，在浏览器中输入对应地址即可访问网站
++ 在library_vue/dist（需解压）目录下运行指令`http-server`即可完成部署，在浏览器中输入对应地址即可访问网站
