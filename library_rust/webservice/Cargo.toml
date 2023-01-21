@@ -20,6 +20,7 @@ sqlx = { version = "0.5.10", features = [
     "macros",
     "chrono",
 ] }
+actix-cors = "0.6.4"
 
 [[bin]]
 name = "library-service"

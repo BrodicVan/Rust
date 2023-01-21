@@ -3,15 +3,20 @@ import App from './App.vue'
 import router from './router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-
+import axios from 'axios'
 
 
 const app = createApp(App)
 
 app.use(router)
 app.use(ElementPlus)
-// app.use(axios)
+// axios.defaults.baseURL = 'http://localhost:3000' 
 
+axios.defaults.baseURL = '/api'
+
+app.config.globalProperties.$axios = axios
+
+app.config.globalProperties.rust = 'http://localhost:3000'
 app.mount('#app')
 
 
