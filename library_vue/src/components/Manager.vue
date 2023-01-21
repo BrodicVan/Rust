@@ -27,6 +27,11 @@
                                 <p>图书管理</p>
                             </div>
                         </el-menu-item>
+                        <el-menu-item index="4" @click="logout">
+                            <div class="menu_font">
+                                <p>退出登录</p>
+                            </div>
+                        </el-menu-item>
                     </el-menu>
                 </el-col>
             </el-aside>
@@ -47,6 +52,7 @@
 import AllUserInfo from './AllUserInfo.vue';
 import AllRecord from './AllRecord.vue'
 import ManageBook from './ManageBook.vue';
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default 
 {
@@ -76,6 +82,24 @@ export default
         changeChoice(c)
         {
             this.choice = c;
+        },
+        logout()
+        {
+            ElMessageBox.confirm(
+                '是否退出',
+                'Warning',
+                {
+                    confirmButtonText: '确认',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }
+            )
+            .then(() => {
+                this.$router.push('/login');
+            })
+            .catch(() => {
+            
+            })
         }
     },
     components: { AllUserInfo, AllRecord, ManageBook }

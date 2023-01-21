@@ -3,8 +3,8 @@
         <el-table
             :data="refreshTableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
             style="width: 100%;margin-top:20px" border :height="580"
-            :default-sort = "{prop: 'id', order: 'ascending'}" stripe empty-text="暂无数据" >
-            <el-table-column  prop="id" label="记录编号" min-width="1" sortable align="center"></el-table-column>
+            stripe empty-text="暂无数据" >
+            <el-table-column  prop="id" label="借阅编号" min-width="1" sortable align="center"></el-table-column>
             <el-table-column prop="book_id" label="书籍编号" min-width="1" align="center"></el-table-column>
             <el-table-column prop="borrow_time" label="借阅时间" min-width="1" align="center" ></el-table-column>
             <el-table-column prop="return_time" label="归还时间" min-width="1" align="center"></el-table-column>
@@ -61,6 +61,14 @@ export default {
         {
             var temData = this.allData;
             temData = temData.filter(data=> !this.search || data.name.toLowerCase().includes(this.search.toLowerCase()))
+            temData.forEach((item,index)=>{
+              item.borrow_time = item.borrow_time.substr(0,10);  
+              if(item.return_time!=null)
+              {
+                item.return_time = item.return_time.substr(0,10);  
+              }
+              
+            })
             this.currentPage = 1;
             return temData;
         }
@@ -117,6 +125,7 @@ export default {
             .then(res=>{
                 this.$message.success("归还成功");
                 this.getAllRecords();
+                return;
             })
             .catch(res=>{
                 this.$message.error(res.response.data.error_message);

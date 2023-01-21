@@ -51,6 +51,10 @@ export default
         refreshTableData()
         {
             var temData = this.allData;
+            temData.forEach((item,index)=>{
+              item.borrow_time = item.borrow_time.substr(0,10);
+              item.return_time = item.return_time.substr(0,10);  
+            })
             this.currentPage = 1;
             return temData;
         }
