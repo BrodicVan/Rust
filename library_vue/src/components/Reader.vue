@@ -2,7 +2,7 @@
     <div class="whole">
         <el-container>
             <el-aside class="aside" >
-                <h1>管理员菜单</h1>
+                <h1>读者菜单</h1>
                 <el-col class="tac" >
                     <el-menu
                         default-active="1"
@@ -27,7 +27,6 @@
             </el-aside>
             <el-main >
                 <BorrowBook v-if="choice==1"></BorrowBook>
-                <AllBorrow v-if="choice==2"></AllBorrow>
             </el-main>
         </el-container>
         
@@ -53,6 +52,18 @@ export default
     created() {
     },
     mounted() {
+        let t = JSON.parse(sessionStorage.getItem("user")||"{}")
+        if(t==null || t=={})
+        {
+            this.$router.push('/login')
+            return
+        }
+        
+        if( t.is_mana)
+        {
+            this.$message.error("权限不足");
+            this.$router.push('/manager')
+        }
     },
     computed: {},
     methods: {

@@ -16,6 +16,7 @@ pub async fn get_all_records_by_user_id(
 pub async fn get_all_records(
     app_state: web::Data<AppState>,
 ) -> Result<HttpResponse, MyError> {
+    println!("进来这里了");
     get_all_records_db(&app_state.db)
         .await
         .map(|records| HttpResponse::Ok().json(records))

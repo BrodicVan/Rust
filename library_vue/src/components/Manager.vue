@@ -22,12 +22,18 @@
                                 <p>借书记录</p>
                             </div>
                         </el-menu-item>
+                        <el-menu-item index="3" @click="changeChoice(3)">
+                            <div class="menu_font">
+                                <p>图书管理</p>
+                            </div>
+                        </el-menu-item>
                     </el-menu>
                 </el-col>
             </el-aside>
             <el-main >
                 <AllUserInfo v-if="choice==1"></AllUserInfo>
-                <AllBorrow v-if="choice==2"></AllBorrow>
+                <AllRecord v-if="choice==2"></AllRecord>
+                <ManageBook v-if="choice==3"></ManageBook>
             </el-main>
         </el-container>
         
@@ -39,7 +45,8 @@
 
 <script>
 import AllUserInfo from './AllUserInfo.vue';
-import AllBorrow from './AllBorrow.vue'
+import AllRecord from './AllRecord.vue'
+import ManageBook from './ManageBook.vue';
 
 export default 
 {
@@ -52,6 +59,17 @@ export default
     created() {
     },
     mounted() {
+        let t = JSON.parse(sessionStorage.getItem("user")||"{}")
+        if(t==null || t=={})
+        {
+            this.$router.push('/login')
+            return
+        }
+        if( !t.is_mana)
+        {
+            this.$message.error("权限不足");
+            this.$router.push('/reader')
+        }
     },
     computed: {},
     methods: {
@@ -60,7 +78,7 @@ export default
             this.choice = c;
         }
     },
-    components: { AllUserInfo, AllBorrow}
+    components: { AllUserInfo, AllRecord, ManageBook }
 }
 </script>
     

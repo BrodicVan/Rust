@@ -98,7 +98,7 @@ export default
                         this.$axios.post('http://127.0.0.1:3333/reg/',f
                         ).then(res=>
                             {
-                                alert('注册成功，请牢记你的id：'+res.data.id);
+                                this.$message.success('注册成功，请牢记你的id：'+res.data.id);
                                 console.log(res);
                                 sessionStorage.setItem("user", JSON.stringify(res.data))
                                 this.$router.push('/reader');

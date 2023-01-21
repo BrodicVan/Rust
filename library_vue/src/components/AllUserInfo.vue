@@ -2,7 +2,7 @@
     <div>
         <el-table 
             :data="refreshTableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
-            style="width: 100%" border  @filter-change="filterChange"
+            style="width: 100%" border  
             :default-sort = "{prop: 'id', order: 'ascending'}" stripe height="660">
             <el-table-column min-width="1"  prop="id" label="用户编号"  sortable align="center"></el-table-column>
             <el-table-column min-width="1" prop="name" label="用户名"  align="center"></el-table-column>
