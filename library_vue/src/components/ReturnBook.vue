@@ -3,8 +3,8 @@
         <el-table
             :data="refreshTableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
             style="width: 100%;margin-top:20px" border :height="580"
-            :default-sort = "{prop: 'id', order: 'ascending'}" stripe empty-text="暂无数据" >
-            <el-table-column  prop="id" label="记录编号" min-width="1" sortable align="center"></el-table-column>
+            stripe empty-text="暂无数据" >
+            <el-table-column  prop="id" label="借阅编号" min-width="1" sortable align="center"></el-table-column>
             <el-table-column prop="book_id" label="书籍编号" min-width="1" align="center"></el-table-column>
             <el-table-column prop="borrow_time" label="借阅时间" min-width="1" align="center" ></el-table-column>
             <el-table-column prop="return_time" label="归还时间" min-width="1" align="center"></el-table-column>

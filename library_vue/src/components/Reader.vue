@@ -22,6 +22,11 @@
                                 <p>图书归还</p>
                             </div>
                         </el-menu-item>
+                        <el-menu-item index="3" @click="logout">
+                            <div class="menu_font">
+                                <p>退出登录</p>
+                            </div>
+                        </el-menu-item>
                     </el-menu>
                 </el-col>
             </el-aside>
@@ -40,7 +45,7 @@
 <script>
 import BorrowBook from './BorrowBook.vue';
 import ReturnBook from './ReturnBook.vue';
-
+import {  ElMessageBox } from 'element-plus'
 
 
 export default 
@@ -72,6 +77,24 @@ export default
         changeChoice(c)
         {
             this.choice = c;
+        },
+        logout()
+        {
+            ElMessageBox.confirm(
+                '是否退出',
+                'Warning',
+                {
+                    confirmButtonText: '确认',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }
+            )
+            .then(() => {
+                this.$router.push('/login');
+            })
+            .catch(() => {
+            
+            })
         }
     },
     components: { BorrowBook, ReturnBook }
