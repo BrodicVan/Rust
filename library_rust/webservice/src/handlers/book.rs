@@ -43,9 +43,10 @@ pub async fn edit_book(
 
 pub async fn delete_book(
     app_state: web::Data<AppState>,
-    delete_book: web::Json<DeleteBook>,
+    params: web::Path<(i32, i32)>,
 )->Result<HttpResponse,MyError>{
-    delete_book_db(&app_state.db, delete_book.into())
+    let (_, book_id) = params.into_inner();
+    delete_book_db(&app_state.db, book_id)
         .await
         .map(|book| HttpResponse::Ok().json(book))
 }

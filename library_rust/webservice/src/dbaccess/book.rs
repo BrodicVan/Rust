@@ -146,10 +146,10 @@ pub async fn edit_book_db(
 }
 
 
-pub async fn delete_book_db(pool: &PgPool, deletebook: DeleteBook) -> Result<String, MyError> {
+pub async fn delete_book_db(pool: &PgPool, book_id: i32) -> Result<String, MyError> {
     let book_row = sqlx::query!(
         "DELETE FROM book where id=$1",
-        deletebook.id,
+        book_id,
     )
     .execute(pool)
     .await?;

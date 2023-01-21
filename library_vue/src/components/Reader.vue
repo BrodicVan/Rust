@@ -27,7 +27,7 @@
             </el-aside>
             <el-main >
                 <BorrowBook v-if="choice==1"></BorrowBook>
-                <AllBorrow v-if="choice==2"></AllBorrow>
+                <ReturnBook v-if="choice==2"></ReturnBook>
             </el-main>
         </el-container>
         
@@ -39,6 +39,7 @@
 
 <script>
 import BorrowBook from './BorrowBook.vue';
+import ReturnBook from './ReturnBook.vue';
 
 
 
@@ -61,7 +62,7 @@ export default
             this.choice = c;
         }
     },
-    components: { BorrowBook }
+    components: { BorrowBook, ReturnBook }
 }
 </script>
     

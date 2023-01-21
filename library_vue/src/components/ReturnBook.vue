@@ -1,19 +1,18 @@
 <template>
     <div>
-        <el-input v-model="search" placeholder="输入书名进行搜索..."></el-input>
         <el-table
             :data="refreshTableData.slice((currentPage-1)*pageSize,currentPage*pageSize)"
             style="width: 100%;margin-top:20px" border :height="580"
-            :default-sort = "{prop: 'date', order: 'ascending'}" stripe empty-text="暂无数据" >
-            <el-table-column  prop="id" label="书籍编号" min-width="1" sortable align="center"></el-table-column>
-            <el-table-column prop="name" label="书名" min-width="1" align="center"></el-table-column>
-            <el-table-column prop="writer" label="作者" min-width="1" align="center" ></el-table-column>
-            <el-table-column prop="press" label="出版社" min-width="1" align="center"></el-table-column>
-            <el-table-column label="状态" min-width="1" align="center" :formatter="getBorrowed" column-key="status" ></el-table-column>
+            :default-sort = "{prop: 'id', order: 'ascending'}" stripe empty-text="暂无数据" >
+            <el-table-column  prop="id" label="记录编号" min-width="1" sortable align="center"></el-table-column>
+            <el-table-column prop="book_id" label="书籍编号" min-width="1" align="center"></el-table-column>
+            <el-table-column prop="borrow_time" label="借阅时间" min-width="1" align="center" ></el-table-column>
+            <el-table-column prop="return_time" label="归还时间" min-width="1" align="center"></el-table-column>
+            <el-table-column label="状态" min-width="1" align="center" :formatter="getReturn" column-key="status" ></el-table-column>
             <el-table-column   min-width="1" align="center">
                 <template #default="scope">
-                    <el-button link type="primary" size="large" @click="borrow(scope.row)">
-                        借阅
+                    <el-button link type="primary" size="large" @click="returnb(scope.row)">
+                        归还
                     </el-button>
                 </template>
             </el-table-column>
@@ -37,7 +36,7 @@
 
 <script>
 export default {
-    name: "BorrowBook",
+    name: "ReturnBook",
     data () {
         return {
             currentPage: 1,
@@ -54,7 +53,7 @@ export default {
     },
     mounted()
     {
-        this.getAllBooks();
+        this.getAllRecords();
     },
     computed:
     {
@@ -68,9 +67,9 @@ export default {
     },
     methods:
     {
-        getBorrowed(row)
+        getReturn(row)
         {
-            return row.is_borrowed?'外借':'在架';
+            return row.is_return?'已归还':'未归还';
         },
         //每页条数改变时触发 选择一页显示多少行
         handleSizeChange(val)
@@ -85,12 +84,12 @@ export default {
             console.log(`当前页: ${val}`);
             this.currentPage = val;
         },
-        getAllBooks()
+        getAllRecords()
         {
             console.log(this.user)
             this.$axios({
               methods:'GET',
-              url:this.$rust + '/users/'+ this.user.id + '/borrow/',
+              url:this.$rust + '/users/'+ this.user.id + '/return/',
             })
             .then(res=>{
                 console.log('返回数据成功',res.data);
@@ -102,22 +101,22 @@ export default {
           })
         },
 
-        borrow(row)
+        returnb(row)
         {
-            if(row.is_borrowed==true)
+            if(row.is_return==true)
             {
-                this.$message.error("该书籍已被借阅");
-                return;
+                this.$message.error("该书籍已归还");
             }
             console.log("id",row);
             this.$axios.post(
-                this.$rust + '/users/'+ this.user.id + '/borrow/',{
-                    id: row.id
+                this.$rust + '/users/'+ this.user.id + '/return/',{
+                    record_id: row.id,
+                    book_id:row.book_id
                 }
             )
             .then(res=>{
-                this.$message.success("借阅成功");
-                this.getAllBooks();
+                this.$message.success("归还成功");
+                this.getAllRecords();
             })
             .catch(res=>{
                 this.$message.error(res.response.data.error_message);
