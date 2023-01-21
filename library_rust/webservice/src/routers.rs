@@ -26,7 +26,7 @@ pub fn user_routes(cfg: &mut web::ServiceConfig){
     cfg.service(
         web::scope("/users")
             .route("/", web::post().to(post_new_user))
-            .route("/", web::get().to(get_all_users))
+            .route("/all", web::get().to(get_all_users))
             .route("/{user_id}", web::get().to(get_user_by_id))
             .route("/{user_id}", web::put().to(update_user_details))
             .route("/{user_id}", web::delete().to(delete_user))

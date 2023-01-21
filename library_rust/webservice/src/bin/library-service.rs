@@ -1,3 +1,4 @@
+use actix_cors::Cors;
 use actix_web::{web, App, HttpServer};
 use dotenv::dotenv;
 use error::MyError;
@@ -5,6 +6,7 @@ use sqlx::postgres::PgPoolOptions;
 use std::env;
 use std::io;
 use std::sync::Mutex;
+
 
 #[path = "../dbaccess/mod.rs"]
 mod db_access;
@@ -44,6 +46,15 @@ async fn main() -> io::Result<()> {
             .app_data(web::JsonConfig::default().error_handler(|_err,_req|{
                 MyError::InvalidInput("Please Provide valid Json input".to_string()).into()
             }))
+            .wrap(Cors::default()
+            .allow_any_origin()
+            .allowed_origin_fn(|origin, _req_head| {
+                return true
+            })
+            .allow_any_method()
+            .allow_any_header()
+            
+            .max_age(36000))
             .configure(general_routes)
             .configure(course_routes)
             .configure(user_routes)
@@ -52,7 +63,7 @@ async fn main() -> io::Result<()> {
     };
 
     HttpServer::new(app)
-        .bind("127.0.0.1:3000")?
+        .bind("127.0.0.1:3333")?
         .run()
         .await
 }
