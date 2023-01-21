@@ -3,7 +3,7 @@ use serde::{Deserialize,Serialize};
 use chrono::NaiveDateTime;
 
 #[derive(Deserialize,Serialize,Debug,Clone)]
-pub struct Record{
+pub struct bRecord{
     pub id:i32,
     pub user_id:i32,
     pub book_id:i32,

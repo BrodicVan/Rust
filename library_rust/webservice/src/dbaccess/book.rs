@@ -1,7 +1,7 @@
 use sqlx::postgres::PgPool;
 use sqlx::Pool;
 
-use crate::{models::{book::{Book, BorrowBook}, record::Record}, error::MyError};
+use crate::{models::{book::{Book, BorrowBook}, record::bRecord}, error::MyError};
 
 pub async fn get_all_books_db(pool: &PgPool)->Result<Vec<Book>,MyError>
 {
@@ -52,7 +52,7 @@ pub async fn borrow_book_db(
     
 
     let record_row = sqlx::query_as!(
-        Record,
+        bRecord,
         r#"INSERT INTO record (user_id, book_id,return_time, is_return)
         VALUES ($1, $2, NULL, FALSE)
         RETURNING id, user_id, book_id, borrow_time, return_time, is_return"#,
