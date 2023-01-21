@@ -11,7 +11,7 @@
 `DATABASE_URL=postgres://{username}:{password}@localhost:{port}/{database_name}`
 {}内的内容需要自行填入,username默认postgres，port默认5432  
 - 运行指令  
-在library_rust/webservice目录下运行指令`cargo run`即可  
+在library_rust/webservice目录下运行指令`cargo run`即可（如报错，尝试cargo clean后cargo run）  
 
 ## 前端服务器部署
 
