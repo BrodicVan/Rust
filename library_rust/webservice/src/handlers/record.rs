@@ -1,6 +1,6 @@
 use actix_web::{web, HttpResponse};
 
-use crate::{state::AppState, error::MyError, db_access::record::{get_all_records_by_user_id_db, return_book_db}, models::book::ReturnBook};
+use crate::{state::AppState, error::MyError, db_access::record::{get_all_records_by_user_id_db, return_book_db, get_all_records_db}, models::book::ReturnBook};
 
 pub async fn get_all_records_by_user_id(
     app_state: web::Data<AppState>,
@@ -9,6 +9,14 @@ pub async fn get_all_records_by_user_id(
     // let teacher_id = i32::try_from(params.0).unwrap();
     let user_id = params.into_inner();
     get_all_records_by_user_id_db(&app_state.db,user_id)
+        .await
+        .map(|records| HttpResponse::Ok().json(records))
+}
+
+pub async fn get_all_records(
+    app_state: web::Data<AppState>,
+) -> Result<HttpResponse, MyError> {
+    get_all_records_db(&app_state.db)
         .await
         .map(|records| HttpResponse::Ok().json(records))
 }

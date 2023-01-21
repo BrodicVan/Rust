@@ -3,7 +3,7 @@
             <div style="font-size: 30px; text-align: center; padding: 30px 0; color: #333">欢迎注册</div>
             <el-form ref="form" :rules="rules" :model="form">
                 <el-form-item prop="id">
-                    <el-input  v-model="form.id" placeholder="请输入纯数字用户ID..." oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+                    <el-input  v-model="form.id" placeholder="请输入用户名" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
                 </el-form-item>
                 
                 <el-form-item prop="pwd">
@@ -11,6 +11,10 @@
                             placeholder="请输入密码..."></el-input>
                 </el-form-item>
                 
+                <el-form-item prop="again_pwd">
+                    <el-input  v-model="form.pwd" show-password
+                            placeholder="请再次输入密码..."></el-input>
+                </el-form-item>
                 
                 <el-form-item>
                     <el-button style="width: 100%;background-color: #00b385;:" type="primary" @click="login">注册</el-button>
@@ -37,7 +41,8 @@ export default
             form:
             {
                 id:'',
-                pwd:''
+                pwd:'',
+                again_pwd:''
             },
             rules:
             {
