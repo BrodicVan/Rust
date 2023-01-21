@@ -5,7 +5,7 @@ use crate::{models::{book::{Book, BorrowBook, CreateBook, UpdateBook}, record::b
 
 pub async fn get_all_books_db(pool: &PgPool)->Result<Vec<Book>,MyError>
 {
-    let rows = sqlx::query!("SELECT id,name,writer,press,is_borrowed FROM book")
+    let rows = sqlx::query!("SELECT id,name,writer,press,is_borrowed FROM book order by id")
         .fetch_all(pool)
         .await?;
     let books: Vec<Book> = rows

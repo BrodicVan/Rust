@@ -4,7 +4,7 @@ use crate::{models::{record::bRecord, book::{ReturnBook, Book}}, error::MyError}
 
 pub async fn get_all_records_by_user_id_db(pool: &PgPool,user_id:i32)->Result<Vec<bRecord>,MyError>
 {
-    let rows = sqlx::query!("SELECT id,user_id,book_id,borrow_time,return_time,is_return FROM record where user_id=$1",user_id)
+    let rows = sqlx::query!("SELECT id,user_id,book_id,borrow_time,return_time,is_return FROM record where user_id=$1 order by is_return,id",user_id)
         .fetch_all(pool)
         .await?;
     let records: Vec<bRecord> = rows
@@ -26,7 +26,7 @@ pub async fn get_all_records_by_user_id_db(pool: &PgPool,user_id:i32)->Result<Ve
 
 pub async fn get_all_records_db(pool: &PgPool)->Result<Vec<bRecord>,MyError>
 {
-    let rows = sqlx::query!("SELECT id,user_id,book_id,borrow_time,return_time,is_return FROM record")
+    let rows = sqlx::query!("SELECT id,user_id,book_id,borrow_time,return_time,is_return FROM record order by id")
         .fetch_all(pool)
         .await?;
     let records: Vec<bRecord> = rows
