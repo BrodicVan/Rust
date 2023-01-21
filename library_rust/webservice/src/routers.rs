@@ -50,3 +50,13 @@ pub fn reg_routes(cfg: &mut web::ServiceConfig){
             .route("/", web::post().to(post_reg_request))
     );
 }
+
+pub fn manager_routes(cfg: &mut web::ServiceConfig){
+    cfg.service(
+        web::scope("/managers")
+            .route("/{manager_id}/edit", web::get().to(get_all_books))
+            .route("/{manager_id}/edit",web::post().to(add_book))
+            .route("/{manager_id}/edit",web::put().to(edit_book))
+            .route("/{manager_id}/edit",web::delete().to(delete_book))
+    );
+}

@@ -60,6 +60,7 @@ async fn main() -> io::Result<()> {
             .configure(user_routes)
             .configure(login_routes)
             .configure(reg_routes)
+            .configure(manager_routes)
     };
 
     HttpServer::new(app)

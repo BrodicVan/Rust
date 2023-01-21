@@ -5,7 +5,7 @@ use crate::state::AppState;
 use actix_web::{web, HttpResponse};
 
 pub async fn get_all_users(app_state: web::Data<AppState>)-> Result<HttpResponse, MyError>{
-    println!("进来了哟......");
+    
     get_all_users_db(&app_state.db)
         .await
         .map(|users| HttpResponse::Ok().json(users))

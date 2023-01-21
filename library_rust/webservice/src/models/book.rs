@@ -21,6 +21,26 @@ pub struct ReturnBook{
     pub book_id:i32,
 }
 
+#[derive(Deserialize,Debug,Clone)]
+pub struct CreateBook{
+    pub name:String,
+    pub writer:String,
+    pub press:String,
+}
+
+#[derive(Deserialize,Debug,Clone)]
+pub struct UpdateBook{
+    pub id:i32,
+    pub name:Option<String>,
+    pub writer:Option<String>,
+    pub press:Option<String>,
+}
+
+#[derive(Deserialize,Debug,Clone)]
+pub struct DeleteBook{
+    pub id:i32,
+}
+
 impl From<web::Json<BorrowBook>> for BorrowBook{
     fn from(borrow_book: web::Json<BorrowBook>) -> Self {
         BorrowBook { 
@@ -34,6 +54,36 @@ impl From<web::Json<ReturnBook>> for ReturnBook{
         ReturnBook { 
             record_id:return_book.record_id ,
             book_id:return_book.book_id,
+        }        
+    }
+}
+
+impl From<web::Json<CreateBook>> for CreateBook{
+    fn from(create_book: web::Json<CreateBook>) -> Self {
+        CreateBook { 
+            name:create_book.name.clone() ,
+            writer:create_book.writer.clone(),
+            press:create_book.press.clone(),
+        }        
+    }
+}
+
+impl From<web::Json<UpdateBook>> for UpdateBook{
+    fn from(update_book: web::Json<UpdateBook>) -> Self {
+        UpdateBook {
+            id:update_book.id, 
+            name:update_book.name.clone() ,
+            writer:update_book.writer.clone(),
+            press:update_book.press.clone(),
+        }        
+    }
+}
+
+impl From<web::Json<DeleteBook>> for DeleteBook{
+    fn from(delete_book: web::Json<DeleteBook>) -> Self {
+        DeleteBook {
+            id:delete_book.id, 
+            
         }        
     }
 }
