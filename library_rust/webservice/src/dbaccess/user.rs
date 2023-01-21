@@ -1,5 +1,5 @@
 use crate::error::MyError;
-use crate::models::user::{User, CreateUser, UpdateUser, LoginUser};
+use crate::models::user::{User, CreateUser, UpdateUser, LoginUser, RegUser};
 use sqlx::postgres::PgPool;
 
 //查询所有用户
@@ -24,7 +24,7 @@ pub async fn get_all_users_db(pool: &PgPool)->Result<Vec<User>,MyError>
 }
 
 //查询指定用户
-pub async fn get_user_byId_db(pool: &PgPool,id:i32)->Result<User,MyError>
+pub async fn get_user_by_id_db(pool: &PgPool,id:i32)->Result<User,MyError>
 {
     let row = sqlx::query!("SELECT id,name,password,is_mana FROM user1 where id=$1",id)
         .fetch_one(pool)
@@ -138,4 +138,22 @@ pub async fn post_login_request_db(pool: &PgPool, login_user:LoginUser)->Result<
         Err(MyError::InvalidInput("Id or password wrong".into()))
     }
     
+}
+
+//注册
+pub async fn post_reg_request_db(
+    pool: &PgPool,
+    reg_user: RegUser,
+) -> Result<User, MyError> {
+    let row = sqlx::query_as!(
+        User,
+        r#"INSERT INTO user1 (name,password,is_mana)
+        VALUES ($1, $2, FALSE)
+        RETURNING id, name, password, is_mana"#,
+        reg_user.name,reg_user.password
+        )
+    .fetch_one(pool)
+    .await?;
+
+    Ok(row)//Ok(User?
 }

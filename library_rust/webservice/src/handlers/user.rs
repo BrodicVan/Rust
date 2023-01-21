@@ -1,6 +1,6 @@
 use crate::db_access::user::*;
 use crate::error::MyError;
-use crate::models::user::{CreateUser, UpdateUser, LoginUser};
+use crate::models::user::{CreateUser, UpdateUser, LoginUser, RegUser};
 use crate::state::AppState;
 use actix_web::{web, HttpResponse};
 
@@ -11,13 +11,13 @@ pub async fn get_all_users(app_state: web::Data<AppState>)-> Result<HttpResponse
         .map(|users| HttpResponse::Ok().json(users))
 }
 
-pub async fn get_user_byId(
+pub async fn get_user_by_id(
     app_state: web::Data<AppState>,
     params: web::Path<i32>,
 ) -> Result<HttpResponse, MyError> {
     // let teacher_id = i32::try_from(params.0).unwrap();
     let id = params.into_inner();
-    get_user_byId_db(&app_state.db, id)
+    get_user_by_id_db(&app_state.db, id)
         .await
         .map(|user| HttpResponse::Ok().json(user))
 }
@@ -57,6 +57,15 @@ pub async fn post_login_request(
     app_state: web::Data<AppState>,
 )->Result<HttpResponse,MyError>{
     post_login_request_db(&app_state.db, LoginUser::from(login_user))
+        .await
+        .map(|user| HttpResponse::Ok().json(user))
+}
+
+pub async fn post_reg_request(
+    reg_user: web::Json<RegUser>,
+    app_state: web::Data<AppState>,
+)->Result<HttpResponse,MyError>{
+    post_reg_request_db(&app_state.db, RegUser::from(reg_user))
         .await
         .map(|user| HttpResponse::Ok().json(user))
 }

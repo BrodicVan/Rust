@@ -13,7 +13,7 @@ pub enum MyError {
 
 #[derive(Debug, Serialize)]
 pub struct MyErrorResponse {
-    // status:i32,
+    status:i32,
     error_message: String,
 }
 
@@ -51,7 +51,13 @@ impl error::ResponseError for MyError {
 
     fn error_response(&self) -> HttpResponse {
         HttpResponse::build(self.status_code()).json(MyErrorResponse {
-            // status:self.status_code(),
+
+            status: match self.status_code(){
+                StatusCode::INTERNAL_SERVER_ERROR=>0,
+                StatusCode::NOT_FOUND=>1,
+                StatusCode::BAD_REQUEST=>2,
+                _=>-1,
+            },
             error_message: self.error_response(),
         })
     }
