@@ -5,7 +5,7 @@ use sqlx::postgres::PgPool;
 //查询所有用户
 pub async fn get_all_users_db(pool: &PgPool)->Result<Vec<User>,MyError>
 {
-    let rows = sqlx::query!("SELECT id,name,password,is_mana FROM user1")
+    let rows = sqlx::query!("SELECT id,name,password,is_mana FROM user1 order by id")
         .fetch_all(pool)
         .await?;
     let users: Vec<User> = rows

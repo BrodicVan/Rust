@@ -1,6 +1,6 @@
 use actix_web::{web, HttpResponse};
 
-use crate::{state::AppState, error::MyError, db_access::book::{get_all_books_db, borrow_book_db, add_book_db, edit_book_db, delete_book_db}, models::book::{BorrowBook, CreateBook, UpdateBook, DeleteBook}};
+use crate::{state::AppState, error::MyError, db_access::book::{get_all_books_db, borrow_book_db, add_book_db, edit_book_db, delete_book_db}, models::book::{BorrowBook, CreateBook, UpdateBook}};
 
 pub async fn get_all_books(
     app_state: web::Data<AppState>,
