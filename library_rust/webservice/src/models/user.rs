@@ -16,7 +16,7 @@ pub struct CreateUser{
     pub is_mana:bool,
 }
 
-#[derive(Deserialize,Debug,Clone)]
+#[derive(Deserialize,Serialize,Debug,Clone)]
 pub struct UpdateUser{
     pub name:Option<String>,
     pub password:Option<String>,

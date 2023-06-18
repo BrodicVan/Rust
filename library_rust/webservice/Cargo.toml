@@ -10,6 +10,7 @@ default-run = "library-service"
 
 actix-rt = "2.6.0"
 actix-web = "4.0.0"
+rstest = "0.8.0"
 chrono = { version = "0.4.19", features = ["serde"] }
 dotenv = "0.15.0"
 # openssl = { version = "0.10.38", features = ["vendored"] }
@@ -24,6 +25,8 @@ actix-cors = "0.6.4"
 
 [[bin]]
 name = "library-service"
+
+
 
 
 

@@ -1,7 +1,7 @@
 use actix_web::web;
 use serde::{Deserialize,Serialize};
 
-#[derive(Deserialize,Serialize,Debug,Clone)]
+#[derive(Deserialize,Serialize,Debug,Clone, Eq)]
 pub struct Book{
     pub id:i32,
     pub name:String,
@@ -10,25 +10,25 @@ pub struct Book{
     pub is_borrowed:bool,
 }
 
-#[derive(Deserialize,Debug,Clone)]
+#[derive(Deserialize,Serialize,Debug,Clone)]
 pub struct BorrowBook{
     pub id:i32,
 }
 
-#[derive(Deserialize,Debug,Clone)]
+#[derive(Deserialize,Serialize,Debug,Clone)]
 pub struct ReturnBook{
     pub record_id:i32,
     pub book_id:i32,
 }
 
-#[derive(Deserialize,Debug,Clone)]
+#[derive(Deserialize,Serialize,Debug,Clone)]
 pub struct CreateBook{
     pub name:String,
     pub writer:String,
     pub press:String,
 }
 
-#[derive(Deserialize,Debug,Clone)]
+#[derive(Deserialize,Serialize,Debug,Clone)]
 pub struct UpdateBook{
     pub id:i32,
     pub name:Option<String>,
@@ -40,6 +40,17 @@ pub struct UpdateBook{
 pub struct DeleteBook{
     pub id:i32,
 }
+
+impl PartialEq for Book {
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id &&
+        self.name == other.name &&
+        self.writer == other.writer &&
+        self.press == other.press &&
+        self.is_borrowed == other.is_borrowed
+    }
+}
+
 
 impl From<web::Json<BorrowBook>> for BorrowBook{
     fn from(borrow_book: web::Json<BorrowBook>) -> Self {

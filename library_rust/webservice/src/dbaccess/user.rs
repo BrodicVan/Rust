@@ -115,7 +115,7 @@ pub async fn delete_user_db(pool: &PgPool, id: i32) -> Result<String, MyError> {
     )
     .execute(pool)
     .await?;
-    Ok(format!("DeletedI{:?}record", user_row))
+    Ok(format!("DeletedI{:?}record", user_row.rows_affected()))
 }
 
 //判断登录
@@ -156,4 +156,199 @@ pub async fn post_reg_request_db(
     .await?;
 
     Ok(row)//Ok(User?
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use rstest::rstest;
+    use sqlx::postgres::PgPoolOptions;
+    use std::env;
+
+    async fn get_test_db_pool() -> Result<PgPool, MyError> {
+        dotenv::dotenv().ok();
+        let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+        let pool = PgPoolOptions::new()
+            .max_connections(1)
+            .connect(&database_url)
+            .await?;
+        sqlx::query("TRUNCATE TABLE book RESTART IDENTITY CASCADE")
+            .execute(&pool)
+            .await?;
+        sqlx::query("TRUNCATE TABLE record RESTART IDENTITY CASCADE")
+            .execute(&pool)
+            .await?;
+        sqlx::query("TRUNCATE TABLE user1 RESTART IDENTITY CASCADE")
+            .execute(&pool)
+            .await?;
+        sqlx::query(
+            "INSERT INTO book (name, writer, press, is_borrowed)
+            VALUES ('Book1', 'Writer1', 'Press1', FALSE),
+                   ('Book2', 'Writer2', 'Press2', TRUE),
+                   ('Book3', 'Writer3', 'Press3', TRUE)",
+        )
+        .execute(&pool)
+        .await?;
+        sqlx::query(
+            "INSERT INTO user1 (name, password, is_mana)
+            VALUES ('李应东', '123456', TRUE),
+                ('范兆基', '123456', FALSE),
+                ('李昱航', '123456', FALSE)",
+        )
+        .execute(&pool)
+        .await?;
+        sqlx::query(
+            "INSERT INTO record (user_id, book_id,borrow_time,return_time, is_return)
+            VALUES (1, 2, (select NOW() at time zone 'Asia/Shanghai'), NULL, FALSE),
+            (2, 3, (select NOW() at time zone 'Asia/Shanghai'), NULL, FALSE),
+            (1, 1, (select NOW() at time zone 'Asia/Shanghai'), NULL, TRUE)",
+        )
+        .execute(&pool)
+        .await?;
+        Ok(pool)
+    }
+
+    #[actix_rt::test]
+    async fn test_get_all_users_db() -> Result<(), MyError> {
+        let pool = get_test_db_pool().await?;
+        let users = get_all_users_db(&pool).await?;
+        assert_eq!(users.len(),3);
+        Ok(())
+    }
+
+    #[rstest]
+    #[case(1)]
+    #[case(4)]
+    #[actix_rt::test]
+    async fn test_get_user_by_id_db(#[case] id:i32) -> Result<(), MyError> {
+        let pool = get_test_db_pool().await?;
+        let user = get_user_by_id_db(&pool, id).await;
+        if id==1
+        {
+            assert_eq!(user?.name, "李应东");
+        }
+        else {
+            assert!(user.is_err());
+        }
+        Ok(())
+    }
+    #[rstest]
+    #[case("Bob".to_string(), "123456".to_string(), false)]
+    #[case("".to_string(), "".to_string(), false)]
+    #[actix_rt::test]
+    async fn test_post_new_user_db(#[case] name:String,#[case] password:String,#[case] is_mana:bool) -> Result<(), MyError> {
+        let pool = get_test_db_pool().await?;
+        let name_ref = &name;
+        let new_user = CreateUser {
+            name: name_ref.to_string(),
+            password: password,
+            is_mana: is_mana,
+        };
+        let user = post_new_user_db(&pool, new_user).await;
+        if name_ref.len()==0
+        {
+            assert!(user.is_err());
+        }
+        else {
+            assert_eq!(user?.name, name_ref.to_string());
+        }
+        Ok(())
+    }
+
+    #[rstest]
+    #[case(1,"NewName".to_string(), "111111".to_string(), false)]
+    #[case(1,"".to_string(), "".to_string(), false)]
+    #[case(66,"cscs".to_string(), "123456".to_string(), false)]
+    #[actix_rt::test]
+    async fn test_update_user_details_db(#[case] id:i32,#[case] name:String,#[case] password:String,#[case] is_mana:bool) -> Result<(), MyError> {
+        let pool = get_test_db_pool().await?;
+        let name_ref=&name;
+        let update_user = UpdateUser {
+            name: Some(name_ref.to_string()),
+            password: Some(password),
+            is_mana: Some(is_mana),
+        };
+        let user = update_user_details_db(&pool, id, update_user).await;
+        if id==1 {
+            if name_ref.len()==0 {
+                assert!(user.is_err());
+            }
+            else {
+                assert_eq!(user?.name,"NewName");
+            }
+        }
+        else {
+            assert!(user.is_err());
+        }
+        Ok(())
+    }
+
+    #[rstest]
+    #[case(1)]
+    #[case(66)]
+    #[actix_rt::test]
+    async fn test_delete_user_db(#[case] id:i32) -> Result<(), MyError> {
+        let pool = get_test_db_pool().await?;
+        let result = delete_user_db(&pool, id).await?;
+        let expected_message;
+        if id==1 {
+            expected_message = format!("DeletedI{:?}record", 1);
+        }
+        else {
+            expected_message = format!("DeletedI{:?}record", 0);
+        }
+        assert_eq!(result, expected_message);
+        Ok(())
+    }
+
+    #[rstest]
+    #[case(1,"123456".to_string())]
+    #[case(1,"111111".to_string())]
+    #[case(66,"111111".to_string())]
+    #[actix_rt::test]
+    async fn test_post_login_request_db(#[case] id:i32,#[case] password:String) -> Result<(), MyError> {
+        let pool = get_test_db_pool().await?;
+        let password_ref=&password;
+        let login_user = LoginUser {
+            id: id,
+            password: password_ref.to_string(),
+        };
+        let user = post_login_request_db(&pool, login_user).await;
+        if id==1
+        {
+            if password_ref=="123456"
+            {
+                assert_eq!(user?.name,"李应东");
+            }
+            else {
+                assert!(user.is_err());
+            }
+        }
+        else {
+            assert!(user.is_err());
+        }
+        Ok(())
+    }
+
+    #[rstest]
+    #[case("Bob".to_string(), "123456".to_string())]
+    #[case("".to_string(), "".to_string())]
+    #[actix_rt::test]
+    async fn test_post_reg_request_db(#[case] name:String,#[case] password:String) -> Result<(), MyError> {
+        let pool = get_test_db_pool().await?;
+        let name_ref = &name;
+        let reg_user = RegUser {
+            name: name_ref.to_string(),
+            password: password,
+        };
+        let user = post_reg_request_db(&pool, reg_user).await;
+        if name_ref.len()==0
+        {
+            assert!(user.is_err());
+        }
+        else {
+            assert_eq!(user?.name, name_ref.to_string());
+        }
+        Ok(())
+    }
 }
